@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import Footer from "@/components/ui/Footer";
 
 const MobileNav = ({ user }: MobileNavProps) => {
   const pathname = usePathname();
@@ -87,7 +88,8 @@ const MobileNav = ({ user }: MobileNavProps) => {
     </div>
 
     <div className="border-t p-6">
-      FOOTER
+
+      <Footer user= {user} type="mobile" />
     </div>
 
   </div>

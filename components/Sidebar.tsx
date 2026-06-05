@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import Footer from "./ui/Footer";
 
 const SideBar = ({ user }: SiderbarProps) => {
   const pathname = usePathname();
@@ -71,15 +72,10 @@ const SideBar = ({ user }: SiderbarProps) => {
           );
         })}
       </nav>
-
-      {/* User Section */}
-      <div className="mt-6 border-t pt-6">
-        <p className="font-semibold text-black">
-          {user.firstName} {user.lastName}
-        </p>
-      </div>
+        <Footer user={user} />
     </aside>
   );
 };
+
 
 export default SideBar;

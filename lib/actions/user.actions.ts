@@ -10,7 +10,6 @@ import { plaidClient } from '@/lib/plaid';
 import { revalidatePath } from "next/cache";
 import { addFundingSource, createDwollaCustomer } from "./dwolla.actions";
 
-
 const {
     APPWRITE_DATABASE_ID: DATABASE_ID,
     APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
@@ -123,31 +122,45 @@ export const logoutAccount = async () => {
 }
 
 export const createLinkToken = async (user: User) => {
-    try{
-        const tokenParams = {
-            user: {
-                client_user_id: user.$id
-            },
-            client_name: `${user.firstName} ${user.lastName}`,
-            products: ['auth'] as Products [],
-            language: 'en',
-            country_codes: ['US'] as CountryCode[],
-        }
+  try {
+    console.log("createLinkToken called");
 
-        const response = await plaidClient.linkTokenCreate(tokenParams);
-        return parseStringify({ linkToken: response.data.link_token});
-        }catch(error){
-            console.log(error);
-        }
-    }
+    const tokenParams = {
+      user: {
+        client_user_id: user.$id,
+      },
 
+      client_name: `${user.firstName} ${user.lastName}`,
+
+      products: ['auth'] as Products[],
+
+      language: 'en',
+
+      country_codes: ['US'] as CountryCode[],
+    };
+
+    console.log("tokenParams:", tokenParams);
+
+    const response = await plaidClient.linkTokenCreate(tokenParams);
+
+    console.log("LINK TOKEN CREATED");
+
+    return parseStringify({
+      linkToken: response.data.link_token,
+    });
+
+  } catch (error) {
+    console.error("PLAID ERROR:", error);
+    return null;
+  }
+};
     export const createBankAccount = async ({
     userId,
     bankId,
     accountId,
     accessToken,
     fundingSourceUrl,
-    sharableId,
+    shareableId,
     }: createBankAccountProps) => {
         try{
             const { database } = await createAdminClient();
@@ -162,7 +175,7 @@ export const createLinkToken = async (user: User) => {
                     accountId,
                     accessToken,
                     fundingSourceUrl,
-                    sharableId,
+                    shareableId,
                 }
             );
 
@@ -219,7 +232,7 @@ export const createLinkToken = async (user: User) => {
                 accountId: accountData.account_id,
                 accessToken,
                 fundingSourceUrl,
-                sharableId: encryptId(accountData.account_id),
+                shareableId: encryptId(accountData.account_id),
             });
 
             //Revalidate the path to reflect the changes
